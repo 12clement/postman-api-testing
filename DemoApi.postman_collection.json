@@ -1,0 +1,546 @@
+{
+  "info": {
+    "_postman_id": "6fb28aae-ffea-4b79-9208-04c10cb84314",
+    "name": "DemoApi",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "2046061"
+  },
+  "item": [
+    {
+      "name": "RegisterUsers",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Store bearer token in environment\", function () {\n    var jsonData = pm.response.json();\n    pm.expect(jsonData.token).to.exist;\n    pm.environment.set(\"bearerToken\", jsonData.token);\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "x-api-key",
+            "value": "reqres-free-v1"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"email\": \"eve.holt@reqres.in\",\r\n    \"password\": \"pistol\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://reqres.in/api/register",
+          "protocol": "https",
+          "host": [
+            "reqres",
+            "in"
+          ],
+          "path": [
+            "api",
+            "register"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "ListsUsers",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const jsonData = pm.response.json();\n\n// Test 1: Validate total number of IDs across all pages\npm.test(\"Total number of IDs is 12\", function () {\n    pm.expect(jsonData.total).to.eql(12);\n});\n\n// Test 2: Validate number of IDs returned on current page\npm.test(\"Number of IDs on current page is 6\", function () {\n    pm.expect(jsonData.data.length).to.eql(6);\n});\n\n// Test 3: Validate all items in data array have an id field\npm.test(\"All records have an id field\", function () {\n    jsonData.data.forEach(function(item) {\n        pm.expect(item).to.have.property('id');\n    });\n});\n\n// Log the IDs for visibility\nconst ids = jsonData.data.map(item => item.id);\nconsole.log(\"Total IDs (all pages):\", jsonData.total);\nconsole.log(\"IDs on this page:\", ids);"
+            ]
+          }
+        }
+      ],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "x-api-key",
+            "value": "free_user_3Ip6dfIw0rz6I3qtrQ225MT0YDn"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"email\": \"eve.holt@reqres.in\",\r\n    \"password\": \"pistol\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://reqres.in/api/users?page=2",
+          "protocol": "https",
+          "host": [
+            "reqres",
+            "in"
+          ],
+          "path": [
+            "api",
+            "users"
+          ],
+          "query": [
+            {
+              "key": "page",
+              "value": "2"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "SingleUser",
+      "request": {
+        "method": "GET",
+        "header": []
+      },
+      "response": []
+    },
+    {
+      "name": "SingleUserNotFound",
+      "request": {
+        "method": "GET",
+        "header": []
+      },
+      "response": []
+    },
+    {
+      "name": "ListResources",
+      "request": {
+        "method": "GET",
+        "header": []
+      },
+      "response": []
+    },
+    {
+      "name": "SingleResource",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "x-api-key",
+            "value": "reqres-free-v1",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "https://reqres.in/api/unknown/2",
+          "protocol": "https",
+          "host": [
+            "reqres",
+            "in"
+          ],
+          "path": [
+            "api",
+            "unknown",
+            "2"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "SingleResourceNotFound",
+      "request": {
+        "method": "GET",
+        "header": []
+      },
+      "response": []
+    },
+    {
+      "name": "Create",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Response status code is 201\", function () {\r",
+              "    pm.expect(pm.response.code).to.equal(201);\r",
+              "});\r",
+              "\r",
+              "// Test to check if the 'name' field in the response data matches the 'name' field in the request data\r",
+              "pm.test(\"Name field in the response data matches the name field in the request data\", function () {\r",
+              "    var jsonData = pm.response.json();\r",
+              "    pm.expect(jsonData.name).to.eql(data['name']);\r",
+              "});\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "x-api-key",
+            "value": "{{x-api-key}}",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"name\": \"{{name}}\",\r\n    \"job\": \"{{job}}\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://reqres.in/api/users",
+          "protocol": "https",
+          "host": [
+            "reqres",
+            "in"
+          ],
+          "path": [
+            "api",
+            "users"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Create Copy",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "// Post-response Script\r",
+              "// Add current test result to results collection\r",
+              "const saveCurrentResult = () => {\r",
+              "    // Get the test cases and current index\r",
+              "    const allTestCases = JSON.parse(pm.environment.get(\"allTestCases\") || \"[]\");\r",
+              "    const currentIndex = parseInt(pm.environment.get(\"currentTestIndex\") || \"0\", 10);\r",
+              "    \r",
+              "    // Get current batch results\r",
+              "    let batchResults = JSON.parse(pm.environment.get(\"batchResults\") || \"[]\");\r",
+              "    \r",
+              "    // Add this result\r",
+              "    const responseBody = pm.response.json();\r",
+              "    batchResults.push({\r",
+              "        testCase: currentIndex + 1,\r",
+              "        name: allTestCases[currentIndex].name,\r",
+              "        job: allTestCases[currentIndex].job,\r",
+              "        id: responseBody.id,\r",
+              "        createdAt: responseBody.createdAt\r",
+              "    });\r",
+              "    \r",
+              "    // Save updated results\r",
+              "    pm.environment.set(\"batchResults\", JSON.stringify(batchResults));\r",
+              "    \r",
+              "    console.log(`Completed test case ${currentIndex + 1}/${allTestCases.length}: ${allTestCases[currentIndex].name}`);\r",
+              "};\r",
+              "\r",
+              "// Main execution - validate response and process\r",
+              "pm.test(\"Status code is 201\", function () {\r",
+              "    pm.response.to.have.status(201);\r",
+              "});\r",
+              "\r",
+              "// Save current result\r",
+              "saveCurrentResult();\r",
+              "\r",
+              "// Get state information\r",
+              "const allTestCases = JSON.parse(pm.environment.get(\"allTestCases\") || \"[]\");\r",
+              "const currentIndex = parseInt(pm.environment.get(\"currentTestIndex\") || \"0\", 10);\r",
+              "const nextIndex = currentIndex + 1;\r",
+              "\r",
+              "// Check if we need to run more test cases\r",
+              "if (nextIndex < allTestCases.length) {\r",
+              "    // Set up for next test case\r",
+              "    pm.environment.set(\"currentTestIndex\", nextIndex.toString());\r",
+              "    \r",
+              "    // Use the pm.sendRequest function to automatically trigger the next request\r",
+              "    const nextRequest = {\r",
+              "        url: pm.request.url.toString(),\r",
+              "        method: pm.request.method,\r",
+              "        header: pm.request.headers,\r",
+              "        body: {\r",
+              "            mode: \"raw\",\r",
+              "            raw: JSON.stringify({\r",
+              "                name: allTestCases[nextIndex].name,\r",
+              "                job: allTestCases[nextIndex].job\r",
+              "            }),\r",
+              "            options: {\r",
+              "                raw: {\r",
+              "                    language: \"json\"\r",
+              "                }\r",
+              "            }\r",
+              "        }\r",
+              "    };\r",
+              "    \r",
+              "    console.log(`Automatically sending next test case ${nextIndex + 1}/${allTestCases.length}: ${allTestCases[nextIndex].name}`);\r",
+              "    \r",
+              "    // Send the next request\r",
+              "    pm.sendRequest(nextRequest, function (err, response) {\r",
+              "        if (err) {\r",
+              "            console.error(\"Error in automatic request:\", err);\r",
+              "        } else {\r",
+              "            // Process this response\r",
+              "            console.log(`Received response for automatic request: ${response.code}`);\r",
+              "            \r",
+              "            // Save result\r",
+              "            const responseBody = response.json();\r",
+              "            let batchResults = JSON.parse(pm.environment.get(\"batchResults\") || \"[]\");\r",
+              "            \r",
+              "            batchResults.push({\r",
+              "                testCase: nextIndex + 1,\r",
+              "                name: allTestCases[nextIndex].name,\r",
+              "                job: allTestCases[nextIndex].job,\r",
+              "                id: responseBody.id,\r",
+              "                createdAt: responseBody.createdAt\r",
+              "            });\r",
+              "            \r",
+              "            // Save updated results\r",
+              "            pm.environment.set(\"batchResults\", JSON.stringify(batchResults));\r",
+              "            \r",
+              "            console.log(`Completed test case ${nextIndex + 1}/${allTestCases.length}: ${allTestCases[nextIndex].name}`);\r",
+              "            \r",
+              "            // If we have more test cases, recursively call the next one\r",
+              "            if (nextIndex + 1 < allTestCases.length) {\r",
+              "                const nextNextRequest = {\r",
+              "                    url: pm.request.url.toString(),\r",
+              "                    method: pm.request.method,\r",
+              "                    header: pm.request.headers,\r",
+              "                    body: {\r",
+              "                        mode: \"raw\",\r",
+              "                        raw: JSON.stringify({\r",
+              "                            name: allTestCases[nextIndex + 1].name,\r",
+              "                            job: allTestCases[nextIndex + 1].job\r",
+              "                        }),\r",
+              "                        options: {\r",
+              "                            raw: {\r",
+              "                                language: \"json\"\r",
+              "                            }\r",
+              "                        }\r",
+              "                    }\r",
+              "                };\r",
+              "                \r",
+              "                console.log(`Automatically sending next test case ${nextIndex + 2}/${allTestCases.length}: ${allTestCases[nextIndex + 1].name}`);\r",
+              "                pm.environment.set(\"currentTestIndex\", (nextIndex + 1).toString());\r",
+              "                \r",
+              "                pm.sendRequest(nextNextRequest, function (err2, response2) {\r",
+              "                    if (err2) {\r",
+              "                        console.error(\"Error in automatic request 2:\", err2);\r",
+              "                    } else {\r",
+              "                        // Process this response\r",
+              "                        console.log(`Received response for automatic request 2: ${response2.code}`);\r",
+              "                        \r",
+              "                        // Save result\r",
+              "                        const responseBody2 = response2.json();\r",
+              "                        let batchResults = JSON.parse(pm.environment.get(\"batchResults\") || \"[]\");\r",
+              "                        \r",
+              "                        batchResults.push({\r",
+              "                            testCase: nextIndex + 2,\r",
+              "                            name: allTestCases[nextIndex + 1].name,\r",
+              "                            job: allTestCases[nextIndex + 1].job,\r",
+              "                            id: responseBody2.id,\r",
+              "                            createdAt: responseBody2.createdAt\r",
+              "                        });\r",
+              "                        \r",
+              "                        // Save updated results\r",
+              "                        pm.environment.set(\"batchResults\", JSON.stringify(batchResults));\r",
+              "                        \r",
+              "                        console.log(`Completed test case ${nextIndex + 2}/${allTestCases.length}: ${allTestCases[nextIndex + 1].name}`);\r",
+              "                        \r",
+              "                        // Show final results summary\r",
+              "                        console.log(\"ALL TEST CASES COMPLETED AUTOMATICALLY!\");\r",
+              "                        \r",
+              "                        // Display all results\r",
+              "                        const finalResults = JSON.parse(pm.environment.get(\"batchResults\") || \"[]\");\r",
+              "                        console.log(\"RESULTS SUMMARY:\");\r",
+              "                        \r",
+              "                        finalResults.forEach(function(result) {\r",
+              "                            console.log(`Test Case ${result.testCase}: ${result.name} - ID: ${result.id}, Created: ${result.createdAt}`);\r",
+              "                        });\r",
+              "                        \r",
+              "                        // Reset for next batch\r",
+              "                        pm.environment.set(\"batchInProgress\", \"false\");\r",
+              "                        pm.environment.set(\"currentTestIndex\", \"0\");\r",
+              "                    }\r",
+              "                });\r",
+              "            } else {\r",
+              "                // All test cases complete\r",
+              "                console.log(\"ALL TEST CASES COMPLETED!\");\r",
+              "                \r",
+              "                // Display all results\r",
+              "                const finalResults = JSON.parse(pm.environment.get(\"batchResults\") || \"[]\");\r",
+              "                console.log(\"RESULTS SUMMARY:\");\r",
+              "                \r",
+              "                finalResults.forEach(function(result) {\r",
+              "                    console.log(`Test Case ${result.testCase}: ${result.name} - ID: ${result.id}, Created: ${result.createdAt}`);\r",
+              "                });\r",
+              "                \r",
+              "                // Reset for next batch\r",
+              "                pm.environment.set(\"batchInProgress\", \"false\");\r",
+              "                pm.environment.set(\"currentTestIndex\", \"0\");\r",
+              "            }\r",
+              "        }\r",
+              "    });\r",
+              "} else {\r",
+              "    // All test cases complete\r",
+              "    console.log(\"ALL TEST CASES COMPLETED!\");\r",
+              "    \r",
+              "    // Display all results\r",
+              "    const finalResults = JSON.parse(pm.environment.get(\"batchResults\") || \"[]\");\r",
+              "    console.log(\"RESULTS SUMMARY:\");\r",
+              "    \r",
+              "    finalResults.forEach(function(result) {\r",
+              "        console.log(`Test Case ${result.testCase}: ${result.name} - ID: ${result.id}, Created: ${result.createdAt}`);\r",
+              "    });\r",
+              "    \r",
+              "    // Reset for next batch\r",
+              "    pm.environment.set(\"batchInProgress\", \"false\");\r",
+              "    pm.environment.set(\"currentTestIndex\", \"0\");\r",
+              "}"
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "// Pre-request Script\r",
+              "// Define all test cases\r",
+              "const testCases = [\r",
+              "    { name: \"sarah jane\", job: \"Manager\" },\r",
+              "    { name: \"Paul smith\", job: \"Clerk\" },\r",
+              "    { name: \"ola jane\", job: \"security\" }\r",
+              "];\r",
+              "\r",
+              "// Initialize or get current batch state\r",
+              "let batchInProgress = pm.environment.get(\"batchInProgress\") === \"true\";\r",
+              "let currentIndex = parseInt(pm.environment.get(\"currentTestIndex\") || \"0\", 10);\r",
+              "\r",
+              "// If this is the first call or we've completed a previous batch\r",
+              "if (!batchInProgress) {\r",
+              "    console.log(\"Starting new batch of test cases\");\r",
+              "    pm.environment.set(\"batchInProgress\", \"true\");\r",
+              "    pm.environment.set(\"batchResults\", \"[]\");\r",
+              "    currentIndex = 0;\r",
+              "}\r",
+              "\r",
+              "// Set current test case data\r",
+              "if (currentIndex < testCases.length) {\r",
+              "    pm.environment.set(\"name\", testCases[currentIndex].name);\r",
+              "    pm.environment.set(\"job\", testCases[currentIndex].job);\r",
+              "    console.log(`Setting up test case ${currentIndex + 1}/${testCases.length}: ${testCases[currentIndex].name}`);\r",
+              "}\r",
+              "\r",
+              "// Store test cases for post-request script\r",
+              "pm.environment.set(\"allTestCases\", JSON.stringify(testCases));\r",
+              "pm.environment.set(\"currentTestIndex\", currentIndex.toString());"
+            ],
+            "type": "text/javascript",
+            "packages": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "x-api-key",
+            "value": "{{x-api-key}}",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"name\": \"{{name}}\",\r\n    \"job\": \"{{job}}\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://reqres.in/api/users",
+          "protocol": "https",
+          "host": [
+            "reqres",
+            "in"
+          ],
+          "path": [
+            "api",
+            "users"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "QpwL5tke4Pnpja7X4",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ]
+}
